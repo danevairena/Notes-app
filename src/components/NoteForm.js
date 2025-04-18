@@ -1,26 +1,47 @@
 //importing the useState from React allows a component to store and update data dynamically
 import { useState } from "react";
+//useEffect - When and what should happen after render
+import { useEffect } from "react";
 
 //defines a React component called NoteForm
 //it receives a prop called onAddNote — a function that will be called when a new note is added
 //this function is passed down from the App.js component
-function NoteForm({ onAddNote }) {
+//noteToEdit – an object with the note’s current title/content
+//onUpdateNote – function to call if editing
+function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
     //state variable for the title - title holds the current value, and setTitle is used to change it
     const [title, setTitle] = useState("");
     //state variable for the content - content holds the current value, and setContent is used to change it
     const [content, setContent] = useState("");
   
+    //prefill form if editing
+    useEffect(() => {
+        if(noteToEdit) {
+            setTitle(noteToEdit.title);
+            setContent(noteToEdit.content);
+        }
+    },[noteToEdit]);
+
     //This function runs when the form is submitted
     //checks if both title and content are entered, then calls onAddNote({title, content}) to send the data up yo App.js
     const handleSubmit = (e) => {
         //e.preventDefault() stops the page from reloading
-      e.preventDefault();
-      if (!title || !content) return;
+        e.preventDefault();
+        //check if one or both of the fields are empty
+        if (!title || !content) return;
+        const note = noteToEdit
+        ? {...noteToEdit, title, content}
+        : {title, content};
+        if(noteToEdit) {
+            onUpdateNote(note);
+        }
+        else {
+            onAddNote(note);
+        }
   
-      onAddNote({ title, content });
-      //clear text input fields
-      setTitle("");
-      setContent("");
+        //clear text input fields
+        setTitle("");
+            setContent("");
     };
   
     return (

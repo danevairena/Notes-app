@@ -21,28 +21,67 @@ function App() {
   //it takes a note object (with title & content), then adds the new note to the 
   // existing notes array using the spread operator ...notes
   const addNote = (note) => {
-    setNotes([...notes, note]);
+    //add unique id
+    const newNote = {...note, id:Date.now()};
+    setNotes([...notes, newNote]);
   };
 
   //function to delete note
-  const deleteNote = (indexToDelete) => {
-    setNotes(notes.filter((_,index) => index !== indexToDelete));
+  const deleteNote = (idToDelete) => {
+    setNotes(notes.filter((note) => note.id !== idToDelete));
   };
+
+  //new state variable called editingNote that stores the note currently being edited, or null if we're not editing anything
+  //when a user clicks “Edit,” we’ll set this to that note
+  const [editNote, setEditNote] = useState(null);
+
+  //new state to store the search query
+  const [searchQery, setSearchQuery] = useState("");
+
+  //this function is called when the user submits the edited note
+  //it loops through all existing notes and if a note’s title matches 
+  //the one being edited, we replace it with the new version (updatedNote).
+  const updateNote = (updatedNote) => {
+    setNotes(
+      notes.map((note) =>
+        note.id === editNote.id ? updatedNote : note)
+    );
+    //reset the edit state to go back to default behavior (adding new notes)
+    setEditNote(null);
+  }
 
   //save notes to localStorage every time they change
   useEffect(() => {
     localStorage.setItem("myNotes", JSON.stringify(notes));
   }, [notes]);
 
-  //onAddNote is function from NoteForm component
-  //you are passing the addNote function as a property to NoteForm
-  //when the user fills out the form and submits it, NoteForm will call 
-  //onAddNote(note) — and the new note is added to the state
+  //filtering notes based on the title or content matching the search query
+  const filteredNotes = notes.filter(note =>
+    note.title.toLowerCase().includes(searchQery.toLocaleLowerCase()) ||
+    note.content.toLocaleLowerCase().includes(searchQery.toLocaleLowerCase())
+  );
+
+
+  //in NoteForm you are passing the necessary props
+  //onAddNote(note) — crating new notes
+  //onUpdateNote - for updating edited notes
+  //noteToEdit - the note we’re editing (used to pre-fill the form inputs)
   return (
     <div>
       <h1>My notes app</h1>
-      <NoteForm onAddNote={addNote} />
-      <NoteList notes={notes} onDeleteNote={deleteNote}/>
+      <NoteForm 
+        onAddNote={addNote}
+        onUpdateNote={updateNote}
+        noteToEdit={editNote}
+      />
+      <input
+        type="text"
+        placeholder="Search notes..."
+        value={searchQery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <button onClick={() => setSearchQuery("")} aria-label="Clear search">❌</button>
+      <NoteList notes={filteredNotes} onEditNote={setEditNote} onDeleteNote={deleteNote}/>
     </div>
   );
 }
