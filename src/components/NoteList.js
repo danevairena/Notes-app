@@ -10,10 +10,11 @@ function NoteList({ notes, onEditNote, onDeleteNote }) {
             {notes.length === 0 ? (
                 <p>No notes yet. Add one above!</p>
             ):(
-                notes.map((note, index) => (
+                notes.map((note) => (
                     <div key={note.id}>
                         <h3>{note.title}</h3>
                         <p>{note.content}</p>
+                        <p><strong>Category:</strong>{note.category}</p>
                         <button onClick={() => onEditNote(note)}>Edit</button>{" "}
                         <button onClick={() => onDeleteNote(note.id)}>Delete</button>
                     </div>

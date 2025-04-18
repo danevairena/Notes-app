@@ -13,12 +13,15 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
     const [title, setTitle] = useState("");
     //state variable for the content - content holds the current value, and setContent is used to change it
     const [content, setContent] = useState("");
+    // state to store the note's category
+    const [category,setCategory] = useState("others");
   
     //prefill form if editing
     useEffect(() => {
         if(noteToEdit) {
             setTitle(noteToEdit.title);
             setContent(noteToEdit.content);
+            setCategory(noteToEdit.category);
         }
     },[noteToEdit]);
 
@@ -30,8 +33,8 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
         //check if one or both of the fields are empty
         if (!title || !content) return;
         const note = noteToEdit
-        ? {...noteToEdit, title, content}
-        : {title, content};
+        ? {...noteToEdit, title, content, category}
+        : {title, content, category};
         if(noteToEdit) {
             onUpdateNote(note);
         }
@@ -41,7 +44,8 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
   
         //clear text input fields
         setTitle("");
-            setContent("");
+        setContent("");
+        setCategory("Others");
     };
   
     return (
@@ -54,13 +58,21 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
                 value={title}
                 //onChange updates the state as the user types
                 onChange={(e) => setTitle(e.target.value)}
-            />
+            /><br/>
             <textarea
                 //Shows whatever is in the content state
                 placeholder="Note content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-            />
+            /><br/>
+             <label> Select category:
+                <select name="category" defaultValue="others">
+                    <option value="Home">Home</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Others">Others</option>
+                </select>
+             </label><br/>
             <button type="submit">Add Note</button>
         </form>
     );
