@@ -38,6 +38,9 @@ function App() {
   //new state to store the search query
   const [searchQery, setSearchQuery] = useState("");
 
+  //filtering Notes by category
+  const [categoryFilter, setCategoryFilter] = useState("All");
+
   //this function is called when the user submits the edited note
   //it loops through all existing notes and if a note’s title matches 
   //the one being edited, we replace it with the new version (updatedNote).
@@ -61,6 +64,10 @@ function App() {
     note.content.toLocaleLowerCase().includes(searchQery.toLocaleLowerCase())
   );
 
+  const filteredByCategory = 
+    categoryFilter === "All"
+    ? filteredNotes
+    : filteredNotes.filter(() => filteredNotes.category === categoryFilter);
 
   //in NoteForm you are passing the necessary props
   //onAddNote(note) — crating new notes
@@ -80,8 +87,23 @@ function App() {
         value={searchQery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <button onClick={() => setSearchQuery("")} aria-label="Clear search">❌</button>
-      <NoteList notes={filteredNotes} onEditNote={setEditNote} onDeleteNote={deleteNote}/>
+      <button onClick={() => setSearchQuery("")} aria-label="Clear search">❌</button><br/>
+      <label> Filter by category:
+        <select 
+          name="categoryFilter"
+          //force the select's value to match the state variable
+          value={categoryFilter}
+          //update the state variable on any change
+          onChange={e => setCategoryFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Others">Others</option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Home">Home</option>
+        </select>
+      </label><br/>
+      <NoteList notes={filteredByCategory} onEditNote={setEditNote} onDeleteNote={deleteNote}/>
     </div>
   );
 }
