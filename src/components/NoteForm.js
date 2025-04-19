@@ -14,7 +14,7 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
     //state variable for the content - content holds the current value, and setContent is used to change it
     const [content, setContent] = useState("");
     // state to store the note's category
-    const [category,setCategory] = useState("others");
+    const [category, setCategory] = useState("Others");
   
     //prefill form if editing
     useEffect(() => {
@@ -66,11 +66,17 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
                 onChange={(e) => setContent(e.target.value)}
             /><br/>
              <label> Select category:
-                <select name="category" defaultValue="others">
-                    <option value="Home">Home</option>
+                <select 
+                    name="category"
+                    //force the select's value to match the state variable
+                    value={category}
+                    //update the state variable on any change
+                    onChange={e => setCategory(e.target.value)}
+                >
+                    <option value="Others">Others</option>
                     <option value="Work">Work</option>
                     <option value="Personal">Personal</option>
-                    <option value="Others">Others</option>
+                    <option value="Home">Home</option>
                 </select>
              </label><br/>
             <button type="submit">Add Note</button>
