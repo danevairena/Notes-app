@@ -22,8 +22,10 @@ function App() {
   // existing notes array using the spread operator ...notes
   const addNote = (note) => {
     //add unique id
-    const newNote = {...note, id:Date.now()};
+    const newNote = {...note, id: Date.now(), createdAt: Date.now()};
     setNotes([...notes, newNote]);
+    //hide form after adding
+    setShowForm(false);
   };
 
   //function to delete note
@@ -40,6 +42,13 @@ function App() {
 
   //filtering Notes by category
   const [categoryFilter, setCategoryFilter] = useState("All");
+
+  //sorting state - keeps track of how the user wants the notes sorted
+  const [sortOption, setSortOption] = useState("dateDesc");
+
+  //new state to toggle form visibility
+  const [showForm, setShowForm] = useState(false);
+
 
   //this function is called when the user submits the edited note
   //it loops through all existing notes and if a note’s title matches 
@@ -64,23 +73,49 @@ function App() {
     note.content.toLocaleLowerCase().includes(searchQery.toLocaleLowerCase())
   );
 
+  //filtering notes based on their category
   const filteredByCategory = 
-    categoryFilter === "All"
-    ? filteredNotes
-    : filteredNotes.filter(() => filteredNotes.category === categoryFilter);
+  categoryFilter === "All"
+  ? filteredNotes
+  : filteredNotes.filter(note => note.category === categoryFilter);
+
+  //sorting notes
+  const sortedNotes = [...filteredByCategory].sort((a,b) => {
+    if(sortOption === "titleAsc") {
+      //localeCompare is a string method in JavaScript that compares two strings 
+      //according to the language rules of the current locale (i.e., language and region settings).
+      return a.title.localeCompare(b.title);
+    } else if(sortOption === "titleDesc") {
+      return b.title.localeCompare(a.title);
+    } else if(sortOption === "dateAsc") {
+      //a.id - b.id is commonly used in sorting numbers,
+      //especially when you want to sort objects based on a numeric property like id
+      return a.createdAt - b.createdAt;
+    } else if(sortOption === "dateDesc") {
+      return b.createdAt - a.createdAt;
+    }
+    return 0;
+  })
+  
 
   //in NoteForm you are passing the necessary props
   //onAddNote(note) — crating new notes
   //onUpdateNote - for updating edited notes
   //noteToEdit - the note we’re editing (used to pre-fill the form inputs)
+  //show the form only when showForm is true
   return (
     <div>
       <h1>My notes app</h1>
-      <NoteForm 
-        onAddNote={addNote}
-        onUpdateNote={updateNote}
-        noteToEdit={editNote}
-      />
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Close" : "Add new note"}
+      </button><br/>
+      {showForm && (
+        <NoteForm 
+          onAddNote={addNote}
+          onUpdateNote={updateNote}
+          noteToEdit={editNote}
+        />
+      )}
       <input
         type="text"
         placeholder="Search notes..."
@@ -103,7 +138,19 @@ function App() {
           <option value="Home">Home</option>
         </select>
       </label><br/>
-      <NoteList notes={filteredByCategory} onEditNote={setEditNote} onDeleteNote={deleteNote}/>
+      <label>Sort by:
+        <select
+          name="sortOption"
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
+          <option value="dateDesc">Newest first</option>
+          <option value="dateAsc">Oldest first</option>
+          <option value="titleAsc">Title A-Z</option>
+          <option value="titleDesc">Title Z-A</option>
+        </select>
+      </label><br/>
+      <NoteList notes={sortedNotes} onEditNote={setEditNote} onDeleteNote={deleteNote}/><br/>
     </div>
   );
 }
