@@ -11,12 +11,16 @@ function NoteList({ notes, onEditNote, onDeleteNote }) {
                 <p>No notes yet. Add one above!</p>
             ):(
                 notes.map((note) => (
-                    <div key={note.id}>
-                        <h3>{note.title}</h3>
-                        <p>{note.content}</p>
-                        <p><strong>Category:</strong>{note.category}</p>
-                        <button onClick={() => onEditNote(note)}>Edit</button>{" "}
-                        <button onClick={() => onDeleteNote(note.id)}>Delete</button>
+                    <div className="card mb-3">
+                        <div key={note.id} className="card-body">
+                            <h3 className="card-title text-center">{note.title}</h3>
+                            <p className="text-center">{note.content}</p>
+                            <div className="d-flex justify-content-center align-items-center gap-3 mt-2 flex-wrap">
+                                <p className="card-text mb-0"><strong>{note.category}</strong></p>
+                                <button className="btn btn-sm btn-primary" onClick={() => onEditNote(note)}>Edit</button>
+                                <button className="btn btn-sm btn-danger" onClick={() => onDeleteNote(note.id)}>Delete</button>
+                            </div>
+                        </div>
                     </div>
                 )
             ))}

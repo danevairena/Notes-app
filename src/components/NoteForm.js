@@ -50,37 +50,41 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
   
     return (
         //the function returns the form in jsx code
-        <form onSubmit={handleSubmit}>
-            <input
-                //Shows whatever is in the title state
-                type="text"
-                placeholder="Note title"
-                value={title}
-                //onChange updates the state as the user types
-                onChange={(e) => setTitle(e.target.value)}
-            /><br/>
-            <textarea
-                //Shows whatever is in the content state
-                placeholder="Note content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-            /><br/>
-             <label> Select category:
-                <select 
-                    name="category"
-                    //force the select's value to match the state variable
-                    value={category}
-                    //update the state variable on any change
-                    onChange={e => setCategory(e.target.value)}
-                >
-                    <option value="Others">Others</option>
-                    <option value="Work">Work</option>
-                    <option value="Personal">Personal</option>
-                    <option value="Home">Home</option>
-                </select>
-             </label><br/>
-            <button type="submit">Add Note</button>
-        </form>
+        <div className="note-form">
+            <form onSubmit={handleSubmit}>
+                <input
+                    //Shows whatever is in the title state
+                    type="text"
+                    placeholder="Note title"
+                    value={title}
+                    //onChange updates the state as the user types
+                    onChange={(e) => setTitle(e.target.value)}
+                /><br/>
+                <textarea
+                    //Shows whatever is in the content state
+                    placeholder="Note content"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                /><br/>
+                <label> Select category:
+                    <select 
+                        name="category"
+                        //force the select's value to match the state variable
+                        value={category}
+                        //update the state variable on any change
+                        onChange={e => setCategory(e.target.value)}
+                    >
+                        <option value="Others">Others</option>
+                        <option value="Work">Work</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Home">Home</option>
+                    </select>
+                </label><br/>
+                <button type="submit" className="btn btn-success">
+                    {noteToEdit ? "Update Note" : "Add Note"}
+                </button>
+            </form>
+        </div>
     );
 }
   

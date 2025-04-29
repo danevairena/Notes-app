@@ -60,6 +60,7 @@ function App() {
     );
     //reset the edit state to go back to default behavior (adding new notes)
     setEditNote(null);
+    setShowForm(false); //hide form after updating a note
   }
 
   //save notes to localStorage every time they change
@@ -104,11 +105,16 @@ function App() {
   //noteToEdit - the note we’re editing (used to pre-fill the form inputs)
   //show the form only when showForm is true
   return (
-    <div>
-      <h1>My notes app</h1>
-      <button onClick={() => setShowForm(!showForm)}>
-        {showForm ? "Close" : "Add new note"}
-      </button><br/>
+    <div className="container py-4">
+      <h1 className="text-center mb-4">My notes app</h1>
+
+      {/* Add new note button */}
+      <div className="d-flex justify-content-center mb-3">
+        <button className="btn btn-success" onClick={() => setShowForm(!showForm)}>
+          {showForm ? "Close" : editNote ? "Edit note" : "Add new note"}
+        </button>
+      </div>
+      {/* Add NoteForm conditionally */}
       {showForm && (
         <NoteForm 
           onAddNote={addNote}
@@ -116,14 +122,21 @@ function App() {
           noteToEdit={editNote}
         />
       )}
-      <input
-        type="text"
-        placeholder="Search notes..."
-        value={searchQery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button onClick={() => setSearchQuery("")} aria-label="Clear search">❌</button><br/>
-      <label> Filter by category:
+      <div className="top-controls">
+        <input
+          type="text"
+          placeholder="Search notes..."
+          value={searchQery}
+         onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button 
+          onClick={() => setSearchQuery("")} 
+          className="btn btn-outline-danger"
+          type="button"
+          aria-label="Clear search"
+        >
+          ❌
+        </button>
         <select 
           name="categoryFilter"
           //force the select's value to match the state variable
@@ -137,8 +150,6 @@ function App() {
           <option value="Personal">Personal</option>
           <option value="Home">Home</option>
         </select>
-      </label><br/>
-      <label>Sort by:
         <select
           name="sortOption"
           value={sortOption}
@@ -149,8 +160,14 @@ function App() {
           <option value="titleAsc">Title A-Z</option>
           <option value="titleDesc">Title Z-A</option>
         </select>
-      </label><br/>
-      <NoteList notes={sortedNotes} onEditNote={setEditNote} onDeleteNote={deleteNote}/><br/>
+      </div>
+      <NoteList 
+        notes={sortedNotes} 
+        onEditNote={(note) => {
+          setEditNote(note);
+          setShowForm(true); //this shows the form when editing
+        }} 
+        onDeleteNote={deleteNote}/><br/>
     </div>
   );
 }
