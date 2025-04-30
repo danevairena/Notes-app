@@ -50,7 +50,7 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
   
     return (
         //the function returns the form in jsx code
-        <div className="note-form">
+        <div className="note-form text-center">
             <form onSubmit={handleSubmit}>
                 <input
                     //Shows whatever is in the title state
@@ -66,23 +66,27 @@ function NoteForm({ onAddNote, noteToEdit, onUpdateNote }) {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                 /><br/>
-                <label> Select category:
-                    <select 
+                <div className="d-flex justify-content-between align-items-baseline mt-3 flex-wrap">
+                    <div className="d-flex align-items-center">
+                        <label className="me-2 mb-0"><strong>Category:</strong></label>
+                        <select 
                         name="category"
-                        //force the select's value to match the state variable
+                        className="form-select form-select-sm"
+                        style={{ minWidth: "100px" }}
                         value={category}
-                        //update the state variable on any change
                         onChange={e => setCategory(e.target.value)}
-                    >
+                        >
                         <option value="Others">Others</option>
                         <option value="Work">Work</option>
                         <option value="Personal">Personal</option>
                         <option value="Home">Home</option>
-                    </select>
-                </label><br/>
-                <button type="submit" className="btn btn-success">
-                    {noteToEdit ? "Update Note" : "Add Note"}
-                </button>
+                        </select>
+                    </div>
+
+                    <button type="submit" className="btn btn-success ms-2">
+                        {noteToEdit ? "Update Note" : "Add Note"}
+                    </button>
+                </div>
             </form>
         </div>
     );

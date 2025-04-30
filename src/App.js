@@ -105,69 +105,71 @@ function App() {
   //noteToEdit - the note we’re editing (used to pre-fill the form inputs)
   //show the form only when showForm is true
   return (
-    <div className="container py-4">
-      <h1 className="text-center mb-4">My notes app</h1>
+    <div className="app-container">
+      <div className="container py-4">
+        <h1 className="text-center mb-4 border-bottom">My notes app</h1>
 
-      {/* Add new note button */}
-      <div className="d-flex justify-content-center mb-3">
-        <button className="btn btn-success" onClick={() => setShowForm(!showForm)}>
-          {showForm ? "Close" : editNote ? "Edit note" : "Add new note"}
-        </button>
+        {/* Add new note button */}
+        <div className="d-flex justify-content-center mb-3">
+          <button className="btn btn-success" onClick={() => setShowForm(!showForm)}>
+            {showForm ? "Close" : editNote ? "Edit note" : "Add new note"}
+          </button>
+        </div>
+        {/* Add NoteForm conditionally */}
+        {showForm && (
+          <NoteForm 
+            onAddNote={addNote}
+            onUpdateNote={updateNote}
+            noteToEdit={editNote}
+          />
+        )}
+        <div className="top-controls">
+          <input
+            type="text"
+            placeholder="Search notes..."
+            value={searchQery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button 
+            onClick={() => setSearchQuery("")} 
+            className="btn btn-light btn-outline-danger"
+            type="button"
+            aria-label="Clear search"
+          >
+            ❌
+          </button>
+          <select 
+            name="categoryFilter"
+            //force the select's value to match the state variable
+            value={categoryFilter}
+            //update the state variable on any change
+            onChange={e => setCategoryFilter(e.target.value)}
+          >
+            <option value="All">All</option>
+            <option value="Others">Others</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Home">Home</option>
+          </select>
+          <select
+            name="sortOption"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="dateDesc">Newest first</option>
+            <option value="dateAsc">Oldest first</option>
+            <option value="titleAsc">Title A-Z</option>
+            <option value="titleDesc">Title Z-A</option>
+          </select>
+        </div>
+        <NoteList 
+          notes={sortedNotes} 
+          onEditNote={(note) => {
+            setEditNote(note);
+            setShowForm(true); //this shows the form when editing
+          }} 
+          onDeleteNote={deleteNote}/><br/>
       </div>
-      {/* Add NoteForm conditionally */}
-      {showForm && (
-        <NoteForm 
-          onAddNote={addNote}
-          onUpdateNote={updateNote}
-          noteToEdit={editNote}
-        />
-      )}
-      <div className="top-controls">
-        <input
-          type="text"
-          placeholder="Search notes..."
-          value={searchQery}
-         onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button 
-          onClick={() => setSearchQuery("")} 
-          className="btn btn-outline-danger"
-          type="button"
-          aria-label="Clear search"
-        >
-          ❌
-        </button>
-        <select 
-          name="categoryFilter"
-          //force the select's value to match the state variable
-          value={categoryFilter}
-          //update the state variable on any change
-          onChange={e => setCategoryFilter(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="Others">Others</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Home">Home</option>
-        </select>
-        <select
-          name="sortOption"
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-        >
-          <option value="dateDesc">Newest first</option>
-          <option value="dateAsc">Oldest first</option>
-          <option value="titleAsc">Title A-Z</option>
-          <option value="titleDesc">Title Z-A</option>
-        </select>
-      </div>
-      <NoteList 
-        notes={sortedNotes} 
-        onEditNote={(note) => {
-          setEditNote(note);
-          setShowForm(true); //this shows the form when editing
-        }} 
-        onDeleteNote={deleteNote}/><br/>
     </div>
   );
 }
