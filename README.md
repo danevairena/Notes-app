@@ -31,7 +31,7 @@ As the sole developer and designer of the project, I aimed to:
 - Edit and delete existing notes  
 - Responsive UI for desktop and mobile  
 - Intuitive user experience with clean design  
-- (If applicable) Storage of notes in browser (localStorage) or other persistence mechanism
+- Storage of notes in browser (localStorage)
 
 ---
 
