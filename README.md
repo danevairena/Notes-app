@@ -42,6 +42,8 @@ As the sole developer and designer of the project, I aimed to:
 
 ### Add new note
 <img src="https://github.com/danevairena/Notes-app/blob/master/Screenshots/2.png"></img><br>
+
+### Edit note
 <img src="https://github.com/danevairena/Notes-app/blob/master/Screenshots/4.png"></img><br>
 
 ### Search
